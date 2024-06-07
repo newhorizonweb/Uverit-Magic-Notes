@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "version": "1.0.0",
+    "author": "Uverit",
+
+    "name": "Magic Notes",
+    "description": "Sync your thoughts, organize your tasks, and stay on top of to-dos on all devices.",
+    
+    "icons": {
+        "16": "icons/uverit-mn-logo-16.png",
+        "32": "icons/uverit-mn-logo-32.png",
+        "48": "icons/uverit-mn-logo-48.png",
+        "128": "icons/uverit-mn-logo-128.png",
+        "512": "icons/uverit-mn-logo-512.png"
+    },
+
+    "permissions": [
+        "tabs",
+        "storage"
+    ],
+
+    "action": {
+        "default-icon":{
+            "16": "icons/uverit-mn-logo-16.png",
+            "32": "icons/uverit-mn-logo-32.png",
+            "48": "icons/uverit-mn-logo-48.png",
+            "128": "icons/uverit-mn-logo-128.png",
+            "512": "icons/uverit-mn-logo-512.png"
+        },
+        "default_popup": "popup.html"
+    }
+}

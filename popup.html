@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube - Old Video Page Layout</title>
+    
+    <link rel="stylesheet" type="text/css" href="popup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/webextension-polyfill@latest/dist/browser-polyfill.min.js"></script>
+    <script src="popup.js" defer></script>
+</head>
+<body>
+    <div class="content container">
+
+        <div class="popup-top">
+            <h1>Uverit Magic Notes</h1>
+            <p>Your support fuels even cooler creations </p>
+            <span class="heart-anim">❤️</span>   
+        </div>
+
+        <div class="donate-buttons">
+            <a href="https://ko-fi.com/uverit"
+                class="donate-btn donate-btn1" target="_blank">
+                <img src="icons/kofi-logo.svg" alt="Support on Ko-fi">
+            </a>
+            <a href="https://www.patreon.com/Uverit"
+                class="donate-btn donate-btn2" target="_blank">
+                <img src="icons/patreon-logo.svg" alt="Support on Patreon">
+            </a>
+        </div>
+
+        <div class="mn-page-section container">
+
+            <div class="mn-current-page">
+                <h2 class="page-title current-page-title"></h2>
+                <div class="page-btn dropdown-btn svg-icon"></div>
+            </div>
+
+            <div class="mn-page-list container">
+                <div class="mn-page-list-inner"></div>
+                
+                <button class="del-btn delete-all-btn container">
+                    DELETE ALL
+                </button>
+            </div>
+            
+        </div>
+
+        <div class="mn-field-section container">
+            <div class="mn-list-btns">
+                <button aria-label="Emoji List Button"
+                    class="mn-list-btn container emoji-list-btn svg-icon">
+                </button>
+                <button aria-label="Random Emoji Button"
+                    class="mn-list-btn container rand-emoji-btn svg-icon">
+                </button>
+
+                <button aria-label="List Number Button"
+                    class="mn-list-btn container nr-list-btn svg-icon">
+                </button>
+                <button aria-label="Bullet Point Button"
+                    class="mn-list-btn container bp-list-btn svg-icon">
+                </button>
+            </div>
+
+            <div class="mn-text-field" 
+                id="sec-note-field" data-output="pdf-summary" 
+                contenteditable="true"
+                placeholder="Your Magic Note">
+            </div>
+        </div>
+
+        <button class="del-btn mn-delete-btn container svg-icon"></button>
+
+    </div>
+</body>
+</html>
