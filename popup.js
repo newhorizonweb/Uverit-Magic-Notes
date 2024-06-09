@@ -24,13 +24,20 @@ const noteEmojis = [
     '🙂', '🙃', '😉', '😌', '😍', '😘', '😗', '😙', '😚', '😋', 
     '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🥳', '😏', 
     '😒', '😞', '😔', '😟', '😕', '🙁', '☹️', '😣', '😖', '😫', 
-    '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳', 
+    '😩', '🥺', '😢', '😭', '😤', '😠', '😡', '🤬', '🤯', '😳',
+
+    // Gestures
+    '👍', '✌️', '🤙', '👌', '💪', '✊', '👏', '🙌', '👐', '🤝',
 
     // Hearts
     '❤️', '🧡', '💛', '💚', '💙', '💜', '🖤', '🤍', '🤎', '💔', 
 
     // Symbols
-    '⭐', '🔥', '💦', '🌀', '🌈', '💡', '🔔', '🎵', '💰', '📌',
+    '⭐', '🔥', '💦', '🌍', '💡', '🔔', '🌀', '🧸', '💰', '📌',
+    '🎈', '🎉', '🎊', '🎁', '🎀', '🎵', '📯', '🔑', '🔒', '🔓',
+
+    // Nature
+    '☀️', '☁️', '❄️', '⚡️', '🌈', '🌼', '🌸', '🌿', '🌳', '🍃', 
 
     // Animals
     '🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯', 
@@ -38,6 +45,12 @@ const noteEmojis = [
     // Food
     '🍏', '🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓', '🍈', 
     '🍒', '🍑', '🥭', '🍍', '🥥', '🥝', '🍅', '🍆', '🥑', '🥒',
+
+    // Transportation
+    '🚗', '🚕', '🚲', '🚌', '🚂', '🚊', '✈️', '🚁', '🚢', '🚀',
+
+    // Technology
+    '💻', '📱', '📱', '⌨️', '🖨️', '📷', '📺', '📻', '🛰️', '🎤',
 
     // Activities
     '⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🏉', '🎱', '🏓', '🏸'
@@ -123,19 +136,26 @@ const insertAtCursor = (text) => {
             const nodeElem = document.createElement("span");
             nodeElem.innerHTML = text;
 
-            // Insert the node element
-            range.insertNode(nodeElem);
+            // Check validation after inserting emoji
+            const val = noteFieldInput.innerHTML + nodeElem.outerHTML;
+
+            if (sizeValid(val, true, true)){
+
+                // Insert the node element
+                range.insertNode(nodeElem);
+
+                // Move the cursor after the inserted text
+                range.setStartAfter(nodeElem);
+                range.collapse(true);
+
+                // Clear existing selections
+                sel.removeAllRanges();
+
+                // Select the new range
+                sel.addRange(range);
+
+            }
             
-            // Move the cursor after the inserted text
-            range.setStartAfter(nodeElem);
-            range.collapse(true);
-
-            // Clear existing selections
-            sel.removeAllRanges();
-
-            // Select the new range
-            sel.addRange(range);
-
         }
 
     }
@@ -204,52 +224,44 @@ const noteFieldButtons = () => {
     // List - Numbers
     nrListBtn.addEventListener("click", () => {
 
-        // Get the text
-        getData().then(data => {
+        // Starting number
+        let currListNr = 1;
 
-            let currListNr = 1;
-    
-            // See what's the last number matching the "[number]." scheme
-            const regex = /\d+\./g;
+        // Get the text content
+        const dataVal = noteFieldInput.innerHTML;
 
-            let dataVal = "";
+        // See what's the last number matching the "[number]." scheme
+        const regex = /\d+\./g;
+        const matches = dataVal.match(regex);
 
-            if (data && data.mn_val){
-                dataVal = data.mn_val;
-            }
+        // Check the highest number
+        if (matches && matches.length > 0){
 
-            const matches = dataVal.match(regex);
+            // Initialize with the first number
+            currListNr = parseInt(matches[0]);
 
-            // Check the highest number
-            if (matches && matches.length > 0){
-
-                // Initialize with the first number
-                currListNr = parseInt(matches[0]);
-
-                // Iterate over all matches to find the highest number
-                for (let i = 1; i < matches.length; i++){
-                    const number = parseInt(matches[i]);
-                    if (number > currListNr) {
-                        currListNr = number;
-                    }
+            // Iterate over all matches to find the highest number
+            for (let i = 1; i < matches.length; i++){
+                const number = parseInt(matches[i]);
+                if (number > currListNr){
+                    currListNr = number;
                 }
-
-                // Increment the highest number found by 1
-                currListNr++;
-
-            }
-            
-            // Set the next list number
-            if (noteFieldInput.innerHTML != "") {
-                insertAtCursor(`<br>${currListNr}.&nbsp;`);
-            } else {
-                insertAtCursor(`${currListNr}.&nbsp;`);
             }
 
-            saveDataBtn();
+            // Increment the highest number found by 1
+            currListNr++;
+
+        }
+        
+        // Set the next list number
+        if (noteFieldInput.innerHTML != "") {
+            insertAtCursor(`<br>${currListNr}.&nbsp;`);
+        } else {
+            insertAtCursor(`${currListNr}.&nbsp;`);
+        }
+
+        saveDataBtn();
     
-        });
-
     });
 
     // List - Bullet Points
@@ -302,43 +314,29 @@ const getData = () => {
 
 
 
-    /* Local Storage - Save Data */
+    /* Save Data */
 
-// Save to the extension's storage
-const saveData = (noteVal) => {
+// Check if the popup was closed by the user (e.g. clicking outside the popup)
+// Or the program (e.g. window.close())
+let userClosed = true;
 
-    chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+// Get the current Title & URL
+let currURL;
+let currTitle;
 
-        // Current page URL
-        const currURL = tabs[0].url;
+chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
+    currURL = tabs[0].url;
+    currTitle = tabs[0].title;
+});
 
-        // Current page title
-        const currTitle = tabs[0].title;
+// Send the message to the background.js file
+const sendSaveDataMsg = (noteVal, msgType) => {
 
-        chrome.storage.sync.get("uveritNotesData", function(result){
-
-            // Set the notes & check if the uveritNotesData already exists
-            const data = result.uveritNotesData || {};
-
-            // New data
-            const currData = {
-                mn_title: currTitle,
-                mn_val: noteVal
-            }
-
-            if (data){
-                data[currURL] = currData;
-            } else {
-                let newData = {};
-                newData[currURL] = currData;
-                data = newData;
-            }
-
-            // Update the local storage data
-            chrome.storage.sync.set({ "uveritNotesData": data });
-
-        });
-
+    chrome.runtime.sendMessage({
+        type: msgType,
+        noteVal: noteVal,
+        currURL: currURL,
+        currTitle: currTitle
     });
 
 }
@@ -346,13 +344,150 @@ const saveData = (noteVal) => {
 // Text Area Input
 noteFieldInput.addEventListener("input", (e) => {
     const val = e.target.innerHTML;
-    saveData(val);
+    if (!sizeValid(val, false, false)) return;
+    sendSaveDataMsg(val, "saveDataMsg");
 });
 
 // Text Area Button Click
 const saveDataBtn = () => {
     const val = noteFieldInput.innerHTML;
-    saveData(val);
+    sendSaveDataMsg(val, "saveDataMsg");
+}
+
+// Save data when closing the popup
+document.addEventListener('visibilitychange', () => {
+
+    const val = noteFieldInput.innerHTML;
+
+    if (val && userClosed && document.visibilityState === 'hidden'){
+        if (!sizeValid(val, false, false)) return;
+        console.log("vis-change")
+        sendSaveDataMsg(val, "saveDataMsgInstant");
+    }
+
+});
+
+
+
+    /* Validation */
+
+// Safety margins (in bytes)
+const elemSafe = 192;
+const totalSafe = 2048;
+
+// Max item size
+const maxItemSize = chrome.storage.sync.QUOTA_BYTES_PER_ITEM - elemSafe;
+
+// Check validation
+const sizeValid = (val, leaveAll, isIcon) => {
+
+    let isValid = true;
+
+    // Get the current size
+    const dataSize = new Blob([JSON.stringify(val)]).size;
+
+    let additionalSize = 0;
+
+    if (isIcon){
+        additionalSize = 75; // Additional size, should contain all emojis
+    }
+
+    // Max element size
+    if (dataSize + additionalSize >= maxItemSize){
+
+        isValid = false;
+        showWarnMsg("Storage limit exceeded.");
+
+        // Get the current cursor position
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
+        let preCursorPosition = range.startOffset;
+
+        // Remove just typed character
+        let cutNum = 1;
+
+        // Don't remove any characters
+        if (leaveAll){
+            cutNum = 0; 
+        }
+
+        // Prevent from typing
+        const maxCharNum = noteFieldInput.innerText.length - cutNum;
+        noteFieldInput.innerText = noteFieldInput.innerText.slice(0, maxCharNum);
+
+        // Set the cursor position
+        if (!isIcon){
+            setCursorPosition(noteFieldInput, preCursorPosition);
+        }
+
+    }
+
+    if (isValid){
+        hideWarnMsg();
+    }
+
+    return isValid;
+
+}
+
+const setCursorPosition = (element, position) => {
+    const range = document.createRange();
+    const sel = window.getSelection();
+
+    range.setStart(element.childNodes[0], position);
+    range.collapse(true);
+    sel.removeAllRanges();
+    sel.addRange(range);
+}
+
+noteFieldInput.addEventListener('paste', function(e){
+
+    // Note - pasted text is significantly larger than typed manually
+    // It has to be specifically changed to plain text
+    // Otherwise it would be approx. 50x-80x larger in size
+    
+    // Prevent default paste behavior
+    e.preventDefault();
+        
+    const val = noteFieldInput.innerHTML;
+
+    // Get the plain text from the clipboard
+    const plainText = (e.clipboardData || window.clipboardData).getData('text/plain');
+
+    // Validation
+    if (!sizeValid(val + plainText, true, false)) return;
+
+    // Insert the text at the cursor position
+    document.execCommand('insertText', false, plainText);
+
+});
+
+
+        /* Validation - Message Popup */
+
+const msgPopup = document.querySelector(".message-popup");
+
+// Display the message for this amount time - in ms
+const msgShowTime = 5000;
+
+let msgTimeout;
+
+const showWarnMsg = (msg) => {
+
+    clearTimeout(msgTimeout);
+
+    msgPopup.textContent = msg;
+    msgPopup.classList.add("show-msg");
+
+    msgTimeout = setTimeout(() => {
+        msgPopup.classList.remove("show-msg");
+    }, msgShowTime);
+
+}
+
+const hideWarnMsg = () => {
+    clearTimeout(msgTimeout);
+    msgPopup.classList.remove("show-msg");
 }
 
 
@@ -465,14 +600,21 @@ deleteNoteBtn.addEventListener("click", () => {
         
             // Check if the object for the specific URL exists
             if (data[currURL]){
+
                 delete data[currURL];
                 chrome.storage.sync.set({ "uveritNotesData": data });
+
+                userClosed = false;
                 window.close();
+
             } else {
+
                 deleteNoteBtn.classList.add("delete-error");
+
                 setTimeout(() => {
                     deleteNoteBtn.classList.remove("delete-error");
-                }, buttonErrorTime)
+                }, buttonErrorTime);
+
             }
 
         });
@@ -492,17 +634,23 @@ deleteAllBtn.addEventListener("click", () => {
     chrome.storage.sync.get("uveritNotesData", function(result){
         
         if (result.uveritNotesData){
+
             const confirmation = confirm("Are you sure you want to delete all of your notes?\nYou will lose them forever on all your synced devices.");
 
             if (confirmation){
                 chrome.storage.sync.remove("uveritNotesData");
+                userClosed = false;
                 window.close();
             }
+
         } else {
+
             deleteAllBtn.classList.add("delete-error");
+
             setTimeout(() => {
                 deleteAllBtn.classList.remove("delete-error");
-            }, buttonErrorTime)
+            }, buttonErrorTime);
+
         }
 
     });

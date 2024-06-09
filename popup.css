@@ -544,7 +544,66 @@ body{
 
 
 
-    /* Delete Buttons */
+    /* Bottom Section */
+
+.bottom-section{
+    width:100%;
+    height:var(--size7);
+    margin-top:var(--size2);
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:var(--size2);
+
+    & .message-popup{
+        flex:1;
+        height:100%;
+        padding:0 var(--size4);
+        position:relative;
+
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        
+        opacity:0;
+        background-color:var(--color3a);
+        box-shadow:0 0 4px 1px var(--color2), var(--boxShadowIns2), var(--boxShadowIns1);
+        border-radius:var(--size2);
+
+        transition:var(--trans2);
+        z-index:1;
+    
+        &.show-msg{
+            opacity:1;
+        }
+
+        &:after{
+            content:"";
+            width:100%;
+            height:100%;
+
+            position:absolute;
+            top:0;
+            left:0;
+
+            opacity:0.05;
+            background-color:var(--color2a);
+            border-radius:inherit;
+            z-index:-1;
+        }
+    
+    }
+
+    & .mn-delete-btn{
+        height:100%;
+        aspect-ratio:1/1;
+    }
+
+}
+
+
+        /* Delete Buttons */
 
 .del-btn{
     display:flex;
@@ -563,13 +622,6 @@ body{
         transition:0s;
     }
 
-}
-
-.mn-delete-btn{
-    width:var(--size7);
-    aspect-ratio:1/1;
-    margin-top:var(--size2);
-    margin-left:auto;
 }
 
 .delete-all-btn{
