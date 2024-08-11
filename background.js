@@ -9,8 +9,15 @@ const timeoutTimer = 2000;
 // Timeout Throttle
 let saveDataThrottle;
 
+// Popup Width
+let currentWidth = 0;
+
 // Listen for the messages from the popup script
 chrome.runtime.onMessage.addListener((message) => {
+
+    if (message.type === 'currentPageWidth') {
+        currentWidth = message.width;
+    }
 
     if (message.type === "saveDataMsg"){
 
@@ -74,3 +81,16 @@ const saveData = (noteVal, currURL, currTitle) => {
     });
 
 };
+
+
+
+    /* Popup Width */
+
+// Port Listener
+chrome.runtime.onConnect.addListener(port => {
+    port.onMessage.addListener(message => {
+        if (message.type === 'currentPageWidth'){
+            port.postMessage({ type: 'pageWidth', width: currentWidth });
+        }
+    });
+});

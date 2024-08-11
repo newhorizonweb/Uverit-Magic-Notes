@@ -33,6 +33,8 @@
 
         /* Sizes */
 
+    --field-height:192px;
+
     --size05:2px;
     --size1:4px;
     --size2:8px;
@@ -183,7 +185,8 @@ body{
 }
 
 .content{
-    width:512px;
+    min-width:calc(260px - (var(--size5) * 2));
+    width:calc(var(--popup-width) - (var(--size5) * 2));
     padding:var(--size5);
     background-color:var(--color3a) !important;
 }
@@ -234,6 +237,7 @@ body{
 
     & h1,
     & p{
+        text-wrap:balance;
         text-align:center;
     }
 
@@ -253,8 +257,31 @@ body{
 
 }
 
+@media screen and (width <= 480px){
+
+    .popup-top{
+
+        & .heart-anim{
+            display:none;
+        }
+    
+    }
+
+}
+
+@media screen and (width <= 300px){
+
+    .popup-top{
+
+        & p{
+            display:none;
+        }
+    
+    }
+
+}
+
 .donate-buttons{
-    height:var(--size7);
     margin-top:var(--size2);
     margin-bottom:var(--size4);
 
@@ -263,6 +290,8 @@ body{
 
     & .donate-btn{
         flex:1;
+        min-height:var(--size7);
+
         display:flex;
         justify-content:center;
         align-items:center;
@@ -403,7 +432,7 @@ body{
 
             & .emoji-list-inner{
                 width:100%;
-                height:calc(192px + var(--size2));
+                height:calc(var(--field-height) + var(--size2));
 
                 display:grid;
                 grid-template-columns:repeat(10, 1fr);
@@ -437,8 +466,58 @@ body{
 
     & .mn-text-field{
         width:100%;
-        height:192px;
+        height:var(--field-height);
         overflow-x:auto;
+    }
+
+}
+
+@media screen and (width <= 440px){
+
+    .mn-field-section{
+        
+        & .mn-list-btns{
+
+            & .emoji-list{
+                
+                & .emoji-item{
+                    font-size:5vw;
+                }
+    
+            }
+            
+        }
+        
+    }
+
+}
+
+@media screen and (width <= 400px){
+
+    .mn-field-section{
+        
+        & .mn-list-btns{
+
+            & .emoji-list{
+                
+                & .emoji-list-inner{
+                    grid-template-columns:repeat(5, 1fr);
+
+                    &::-webkit-scrollbar{
+                        width:0;
+                        height:0;
+                    }
+
+                }
+
+                & .emoji-item{
+                    font-size:8vw;
+                }
+    
+            }
+            
+        }
+        
     }
 
 }
@@ -499,7 +578,7 @@ body{
     & .mn-page-list{
         width:100%;
         height:calc(
-            192px + (var(--size4) * 3) +
+            var(--field-height) + (var(--size4) * 3) +
             var(--size7) + var(--size2)
         );
         padding:var(--size4);
@@ -538,6 +617,19 @@ body{
             
         }
 
+    }
+
+}
+
+@media screen and (width <= 340px){
+
+    :root{
+        --field-height:calc(192px - var(--size7) - var(--size1));
+    }
+
+    .donate-buttons{
+        flex-direction:column;
+        row-gap:var(--size1);
     }
 
 }
